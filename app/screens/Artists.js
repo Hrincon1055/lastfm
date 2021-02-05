@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from "react";
 import { View, StyleSheet, ActivityIndicator } from "react-native";
-import { Text } from "react-native-elements";
+import { Text, Icon, Button } from "react-native-elements";
 import { PRIMARY_COLOR } from "../utils/styleConstants";
 import ListArtists from "../components/artists/ListArtists";
 import { getArtistApi } from "../api/artists";
 
 // Inicio
-export default function Artists() {
+export default function Artists(props) {
+  // props
+  const { navigation } = props;
   // state
   const [artists, setArtists] = useState(null);
+  console.log("SearchArtists  Line 19", artists);
   // effect
   useEffect(() => {
     (async () => {
@@ -25,9 +28,19 @@ export default function Artists() {
   }
   return (
     <View style={styles.listArtistContentent}>
-      <Text h3 style={styles.title}>
-        List Artists Top
-      </Text>
+      <View style={styles.searchContent}>
+        <Text h3 style={styles.title}>
+          List Artists Top
+        </Text>
+        <Icon
+          name="search-circle-outline"
+          type="ionicon"
+          color={PRIMARY_COLOR}
+          size={40}
+          iconStyle={styles.icon}
+          onPress={() => navigation.navigate("searchArtists")}
+        />
+      </View>
       <ListArtists artists={artists} />
     </View>
   );
@@ -43,8 +56,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#fff",
   },
-  title: {
-    paddingVertical: 10,
-    fontWeight: "bold",
+  searchContent: {
+    width: "100%",
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingHorizontal: 10,
+    paddingTop: 10,
   },
 });
