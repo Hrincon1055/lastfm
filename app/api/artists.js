@@ -1,10 +1,11 @@
 import { BASE_PATH, API_KEY, FORMAT_JSON } from "../utils/constants";
 // Funcion para obtener todos los artistas
-export async function getArtistApi() {
+export async function getArtistApi(page) {
   try {
     const method = "?method=geo.gettopartists";
     const country = "&country=spain&api_key=";
-    const url = `${BASE_PATH}${method}${country}${API_KEY}${FORMAT_JSON}&limit=20`;
+
+    const url = `${BASE_PATH}${method}${country}${API_KEY}${FORMAT_JSON}&limit=5&page=${page}`;
     const response = await fetch(url);
     const result = await response.json();
     return result;

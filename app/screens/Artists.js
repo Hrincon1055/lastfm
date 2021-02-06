@@ -11,14 +11,30 @@ export default function Artists(props) {
   const { navigation } = props;
   // state
   const [artists, setArtists] = useState(null);
-  console.log("SearchArtists  Line 19", artists);
+  const [page, setPage] = useState(1);
+  const [showBtnMore, setShowBtnMore] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+
   // effect
   useEffect(() => {
     (async () => {
-      const response = await getArtistApi();
-      setArtists(response || []);
+      const response = await getArtistApi(page);
+      const totalPages = response.topartists["@attr"].totalPages;
+      if (page < totalPages) {
+        if (!artists) {
+          setArtists(response.topartists.artist);
+        } else {
+          setIsLoading(true);
+          setArtists([...artists, ...response.topartists.artist]);
+          setTimeout(() => {
+            setIsLoading(false);
+          }, 1000);
+        }
+      } else {
+        setShowBtnMore(false);
+      }
     })();
-  }, []);
+  }, [page]);
   if (!artists) {
     return (
       <View style={styles.contentActivityIndicator}>
@@ -41,7 +57,14 @@ export default function Artists(props) {
           onPress={() => navigation.navigate("searchArtists")}
         />
       </View>
-      <ListArtists artists={artists} />
+      <ListArtists
+        artists={artists}
+        page={page}
+        setPage={setPage}
+        showBtnMore={showBtnMore}
+        isLoading={isLoading}
+        setIsLoading={setIsLoading}
+      />
     </View>
   );
 }

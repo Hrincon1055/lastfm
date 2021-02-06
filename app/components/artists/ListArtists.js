@@ -4,17 +4,27 @@ import { ListItem, Avatar, Button } from "react-native-elements";
 // Inicio
 export default function ListArtists(props) {
   // props
-  const { artists } = props;
+  const {
+    artists,
+    page,
+    setPage,
+    showBtnMore,
+    isLoading,
+    setIsLoading,
+  } = props;
   // state
-  const [showBtnMore, setShowBtnMore] = useState(true);
+
   // Funciones
   const openUrl = (urlArtist) => {
     Linking.openURL(urlArtist);
   };
-
+  const loadMoreArtists = () => {
+    setIsLoading(true);
+    setPage(page + 1);
+  };
   return (
     <ScrollView style={styles.listArtistsContent}>
-      {artists.topartists.artist.map((l, i) => (
+      {artists.map((l, i) => (
         <ListItem key={i} bottomDivider onPress={() => openUrl(l.url)}>
           <Avatar source={{ uri: l.image[0]["#text"] }} />
           <ListItem.Content>
@@ -23,9 +33,14 @@ export default function ListArtists(props) {
           </ListItem.Content>
         </ListItem>
       ))}
-      {/* {showBtnMore && (
-        <Button title="Cargar mas..." type="outline" loading={true} />
-      )} */}
+      {showBtnMore && (
+        <Button
+          title="CARGAR MAS..."
+          type="outline"
+          loading={isLoading}
+          onPress={loadMoreArtists}
+        />
+      )}
     </ScrollView>
   );
 }
